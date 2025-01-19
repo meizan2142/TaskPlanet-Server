@@ -32,38 +32,38 @@ async function run() {
         console.log('Database connected successfully');
 
         // Collection
-        // const userCollection = client.db('nodejs').collection('users');
+        const userCollection = client.db('TaskPlanet').collection('allusers');
         //  Get operation
-        // app.get('/users', async (req, res) => {
-        //   const result = await userCollection.find().toArray()
-        //   res.send(result)
-        // })
+        app.get('/allusers', async (req, res) => {
+            const result = await userCollection.find().toArray()
+            res.send(result)
+        })
         // Get a specific user data
-        // app.get('/users/:email', async (req, res) => {
-        //   const email = req.params.email
-        //   const result = await userCollection.findOne({ email })
-        //   res.send(result)
-        // })
+        app.get('/allusers/:email', async (req, res) => {
+            const email = req.params.email
+            const result = await userCollection.findOne({ email })
+            res.send(result)
+        })
         // Post route for client-side registration
-        // app.post('/users', async (req, res) => {
-        //   try {
-        //     const newUsers = req.body;
-        //     const query = { email: newUsers.email };
-        //     const existingUser = await userCollection.findOne(query);
+        app.post('/allusers', async (req, res) => {
+            try {
+                const newUsers = req.body;
+                const query = { email: newUsers.email };
+                const existingUser = await userCollection.findOne(query);
 
-        //     if (existingUser) {
-        //       return res.status(409).send({ message: 'User already exists', insertedId: null });
-        //     }
+                if (existingUser) {
+                    return res.status(409).send({ message: 'User already exists', insertedId: null });
+                }
 
-        //     const result = await userCollection.insertOne(newUsers);
-        //     res.status(201).send(result);
-        //   } catch (error) {
-        //     console.error("Error inserting user:", error);
-        //     res.status(500).send({ message: 'Internal Server Error' });
-        //   }
-        // });
-    } 
-    finally {}
+                const result = await userCollection.insertOne(newUsers);
+                res.status(201).send(result);
+            } catch (error) {
+                console.error("Error inserting user:", error);
+                res.status(500).send({ message: 'Internal Server Error' });
+            }
+        });
+    }
+    finally { }
 }
 run().catch(console.dir);
 
